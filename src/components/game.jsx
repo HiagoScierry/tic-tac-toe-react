@@ -47,23 +47,17 @@ export function Game() {
   };
 
   const checkRows = () => {
-    return board.every((row) => {
-      if (row.every((cell) => cell === player)) {
-        setWinner(player);
-        return true;
-      }
-      return false;
-    });
+    return board.some((row) => row.every((cell) => cell === player));
   };
 
   const checkColumns = () => {
-    return board[0].every((cell, index) => {
-      if (board.every((row) => row[index] === player)) {
-        setWinner(player);
+    const checked = board.map((row, index) => {
+      const column = [board[0][index], board[1][index], board[2][index]];
+      if(column.every((cell) => cell === player)){
         return true;
       }
-      return false;
     });
+    return checked.some((column) => column === true);
   };
 
   const checkDiagonals = () => {
@@ -80,12 +74,16 @@ export function Game() {
     <div className="flex flex-col justify-evenly items-center w-screen h-screen bg-slate-700 text-slate-300">
       <div className="flex flex-col justify-center items-center">
         <h1 className="text-4xl text-center">Tic Tac Toe</h1>
-        <h2 className="text-xl text-center">Jogando : <span className="uppercase">{player}</span></h2>
+        <h2 className="text-xl text-center">
+          Jogando : <span className="uppercase">{player}</span>
+        </h2>
       </div>
       <Board board={board} movePlayer={movePlayer} />
 
       <div>
-        {winner && <h2 className="text-2xl text-center uppercase">Vencedor: {winner}</h2>}
+        {winner && (
+          <h2 className="text-2xl text-center uppercase">Vencedor: {winner}</h2>
+        )}
 
         {moves == 0 && !winner && (
           <h2 className="text-2xl text-center">Empate</h2>
